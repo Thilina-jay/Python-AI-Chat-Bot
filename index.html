@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jay GPT</title>
+    <link rel="icon" href="squarespace-icon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+            width: 50%;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            margin-bottom: 60px; 
+            max-height:fit-content
+          
+        }
+
+      
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            word-wrap: break-word; 
+        }
+
+        .user-message {
+            background-color: #4CAF50;
+            color: #fff;
+            align-self: flex-end;
+            margin-left: auto;
+            padding-right: 10px;
+            max-width: fit-content;
+            overflow: hidden; 
+        }
+
+        .bot-message {
+            background-color: #ddd;
+            color: #333;
+            align-self: flex-start;
+            max-width: fit-content;
+        }
+
+        .input-container-bottom {
+            position: fixed;
+            bottom: 0;
+            width: 50%;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 10px;
+
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            left: 25%; 
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            width: calc(100% - 90px);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-right: 10px;
+        }
+
+        .chat-button {
+            width: 80px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-box" id="chat-box"></div>
+    </div>
+
+   
+    <div class="input-container-bottom">
+    
+        <input type="text" id="user-input" class="chat-input" placeholder="Enter your message" onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()" class="chat-button">Send</button>
+    </div>
+
+<script>
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    async function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+        const chatBox = document.getElementById('chat-box');
+
+        chatBox.innerHTML += `<div class="message user-message">${userInput}</div>`;
+
+        const response = await fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `user_input=${encodeURIComponent(userInput)}`,
+        });
+
+        const responseData = await response.json();
+
+        chatBox.innerHTML += `<div class="message bot-message">${responseData.response}</div>`;
+
+        
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        document.getElementById('user-input').value = '';
+    }
+</script>
+</body>
+</html>
